@@ -63,9 +63,9 @@ Salvation.Video.Driver_DrawMesh = function(p_Mesh, p_Material, p_Position, p_Sca
     this.PushModelView();
 
     // Do local transformation
-    this.ModelViewMatrix.Scale(p_Scale.X, p_Scale.Y, p_Scale.Z);
     this.ModelViewMatrix.Translate(p_Position.X, p_Position.Y, p_Position.Z);
     this.ModelViewMatrix.RotateXYZ(p_Rotation.X * DegToRadCoefficient, p_Rotation.Y * DegToRadCoefficient, p_Rotation.Z * DegToRadCoefficient);
+    this.ModelViewMatrix.Scale(p_Scale.X, p_Scale.Y, p_Scale.Z);
 
     // Bind shader
     this.Device.GlContext.useProgram(p_Material.Shader.Program);
