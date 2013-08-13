@@ -121,8 +121,8 @@ Salvation.Device_IsCreated = function() {
  
 // Matrix 4 constructor
 Salvation.Core.Matrix4 = function() {
-    this.Type         = "Salvation.Core.Matrix4";
-    this.Values     = (typeof Float32Array !== 'undefined') ? new Float32Array(16) : new Array(16);
+    this.Type   = "Salvation.Core.Matrix4";
+    this.Values = (typeof Float32Array !== 'undefined') ? new Float32Array(16) : new Array(16);
     
     for (l_I = 0 ; l_I < 16 ; ++l_I)
         this.Values[l_I] = 0;
@@ -196,16 +196,16 @@ Salvation.Core.Matrix4_Rotate = function(p_Rad, p_Axis) {
     var l_B22 = l_ZAxis * l_ZAxis * l_T + l_C;
 
     // Perform rotation-specific matrix multiplication
-    this.Values[0]      = this.Values[0] * l_B00 + this.Values[4] * l_B01 + this.Values[8]     * l_B02;
-    this.Values[1]      = this.Values[1] * l_B00 + this.Values[5] * l_B01 + this.Values[9]     * l_B02;
+    this.Values[0]      = this.Values[0] * l_B00 + this.Values[4] * l_B01 + this.Values[8]  * l_B02;
+    this.Values[1]      = this.Values[1] * l_B00 + this.Values[5] * l_B01 + this.Values[9]  * l_B02;
     this.Values[2]      = this.Values[2] * l_B00 + this.Values[6] * l_B01 + this.Values[10] * l_B02;
     this.Values[3]      = this.Values[3] * l_B00 + this.Values[7] * l_B01 + this.Values[11] * l_B02;
-    this.Values[4]      = this.Values[0] * l_B10 + this.Values[4] * l_B11 + this.Values[8]     * l_B12;
-    this.Values[5]      = this.Values[1] * l_B10 + this.Values[5] * l_B11 + this.Values[9]     * l_B12;
+    this.Values[4]      = this.Values[0] * l_B10 + this.Values[4] * l_B11 + this.Values[8]  * l_B12;
+    this.Values[5]      = this.Values[1] * l_B10 + this.Values[5] * l_B11 + this.Values[9]  * l_B12;
     this.Values[6]      = this.Values[2] * l_B10 + this.Values[6] * l_B11 + this.Values[10] * l_B12;
     this.Values[7]      = this.Values[3] * l_B10 + this.Values[7] * l_B11 + this.Values[11] * l_B12;
-    this.Values[8]      = this.Values[0] * l_B20 + this.Values[4] * l_B21 + this.Values[8]     * l_B22;
-    this.Values[9]      = this.Values[1] * l_B20 + this.Values[5] * l_B21 + this.Values[9]     * l_B22;
+    this.Values[8]      = this.Values[0] * l_B20 + this.Values[4] * l_B21 + this.Values[8]  * l_B22;
+    this.Values[9]      = this.Values[1] * l_B20 + this.Values[5] * l_B21 + this.Values[9]  * l_B22;
     this.Values[10]     = this.Values[2] * l_B20 + this.Values[6] * l_B21 + this.Values[10] * l_B22;
     this.Values[11]     = this.Values[3] * l_B20 + this.Values[7] * l_B21 + this.Values[11] * l_B22;
 }
@@ -218,8 +218,8 @@ Salvation.Core.Matrix4_RotateXYZ = function(p_X, p_Y, p_Z) {
 
 // Translate matrix4
 Salvation.Core.Matrix4_Translate = function(p_X, p_Y, p_Z) {
-    this.Values[12] = this.Values[0] * p_X + this.Values[4] * p_Y + this.Values[8] * p_Z + this.Values[12];
-    this.Values[13] = this.Values[1] * p_X + this.Values[5] * p_Y + this.Values[9] * p_Z + this.Values[13];
+    this.Values[12] = this.Values[0] * p_X + this.Values[4] * p_Y + this.Values[8]  * p_Z + this.Values[12];
+    this.Values[13] = this.Values[1] * p_X + this.Values[5] * p_Y + this.Values[9]  * p_Z + this.Values[13];
     this.Values[14] = this.Values[2] * p_X + this.Values[6] * p_Y + this.Values[10] * p_Z + this.Values[14];
     this.Values[15] = this.Values[3] * p_X + this.Values[7] * p_Y + this.Values[11] * p_Z + this.Values[15];
 }
@@ -244,6 +244,39 @@ Salvation.Core.Matrix4_Identity = function(p_X, p_Y, p_Z) {
     this.Values[10]     = 1;
     this.Values[15]     = 1;
 }
+
+/*
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+// Vector3 constructor
+Salvation.Core.Vector3 = function(p_X, p_Y, p_Z) {
+    this.Type = "Salvation.Core.Vector3";
+
+    if (p_Z !== undefined)
+    {
+        this.X = p_X;
+        this.Y = p_Y;
+        this.Z = p_Z;
+    }
+    else
+    {
+        this.X = 0;
+        this.Y = 0;
+        this.Z = 0;
+    }
+};
 
 /*
  * This program is free software; you can redistribute it and/or modify it
@@ -308,12 +341,21 @@ Salvation.Video.Driver = function(p_Device) {
     p_Device.GlContext.enable(p_Device.GlContext.DEPTH_TEST);
     p_Device.GlContext.clearColor(this.ClearColor.R, this.ClearColor.G, this.ClearColor.B, this.ClearColor.A);
     
+    // Create default shader
+    this.DefaultShader = new Salvation.Video.Shader(this, DefaultFragmentProgram, DefaultVertexProgram);
+    this.DefaultShader.Init = DefaultProgramInitFunction;
+    this.DefaultShader.Bind = DefaultProgramBindFunction;
+    this.DefaultShader.Init();
+
     // Bind class functions
     this.BeginScene         = Salvation.Video.Driver_BeginScene;
     this.EndScene           = Salvation.Video.Driver_EndScene;
+    this.DrawMesh           = Salvation.Video.Driver_DrawMesh;
     this.PushModelView      = Salvation.Video.Driver_PushModelView;
     this.PopModelView       = Salvation.Video.Driver_PopModelView;
     this.UpdateClearColor   = Salvation.Video.Driver_UpdateClearColor;
+    this.GetDefaultShader   = Salvation.Video.Driver_GetDefaultShader;
+    this.CreateMesh         = Salvation.Video.Driver_CreateMesh;
 };
 
 // Prepare frame rendering
@@ -322,6 +364,7 @@ Salvation.Video.Driver_BeginScene = function() {
     this.Device.GlContext.clear(this.Device.GlContext.COLOR_BUFFER_BIT | this.Device.GlContext.DEPTH_BUFFER_BIT);
     
     this.ProjectionMatrix.Perspective(45, this.Device.GlContext.viewportWidth / this.Device.GlContext.viewportHeight, 0.1, 100.0);
+    this.ModelViewMatrix.Identity();
 };
 // End frame rendering
 Salvation.Video.Driver_EndScene = function() {
@@ -329,14 +372,25 @@ Salvation.Video.Driver_EndScene = function() {
 };
 
 // Draw a mesh
-Salvation.Video.Driver_DrawMesh = function(p_Mesh) {
+Salvation.Video.Driver_DrawMesh = function(p_Mesh, p_Material, p_Position, p_Scale, p_Rotation) {
     this.PushModelView();
 
-    this.ModelViewMatrix.RotateXYZ(p_Mesh.Rotation.X * DegToRadCoefficient, p_Mesh.Rotation.Y * DegToRadCoefficient, p_Mesh.Rotation.Z * DegToRadCoefficient);
-    this.ModelViewMatrix.Translate(p_Mesh.Position.X, p_Mesh.Position.Y, p_Mesh.Position.Z);
-    this.ModelViewMatrix.Scale(p_Mesh.Scale.X, p_Mesh.Scale.Y, p_Mesh.Scale.Z);
+    // Do local transformation
+    this.ModelViewMatrix.RotateXYZ(p_Rotation.X * DegToRadCoefficient, p_Rotation.Y * DegToRadCoefficient, p_Rotation.Z * DegToRadCoefficient);
+    this.ModelViewMatrix.Translate(p_Position.X, p_Position.Y, p_Position.Z);
+    this.ModelViewMatrix.Scale(p_Scale.X, p_Scale.Y, p_Scale.Z);
+
+    // Bind shader
+    this.Device.GlContext.useProgram(p_Material.Shader.Program);
     
-    // todo
+    // Bind values to the shader
+    p_Material.Shader.Bind(p_Mesh);
+    
+    // Bind indices array
+    this.Device.GlContext.bindBuffer(this.Device.GlContext.ELEMENT_ARRAY_BUFFER, p_Mesh.IndiceBufferPtr);
+    
+    // Draw the mesh
+    this.Device.GlContext.drawElements(this.Device.GlContext.TRIANGLES, p_Mesh.IndiceBufferPtr.numItems, this.Device.GlContext.UNSIGNED_SHORT, 0);
     
     this.PopModelView();
 };
@@ -360,5 +414,255 @@ Salvation.Video.Driver_PopModelView = function() {
 // Update clear color of gl context
 Salvation.Video.Driver_UpdateClearColor = function() {
     this.Device.GlContext.clearColor(this.ClearColor.R, this.ClearColor.G, this.ClearColor.B, this.ClearColor.A);
+};
+
+// Return default shader program
+Salvation.Video.Driver_GetDefaultShader = function() {
+    return this.DefaultShader;
+}
+
+// Create an empty mesh
+Salvation.Video.Driver_CreateMesh = function(p_Name) {
+    return new Salvation.Video.Mesh(this, p_Name);
+}
+
+/*
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+// Material constructor
+Salvation.Video.Material = function(p_VideoDriver) {
+    this.Type           = "Salvation.Video.Material";
+    this.Texture        = 0;
+    this.Shader         = p_VideoDriver.GetDefaultShader();
+};
+
+/*
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+// Mesh constructor
+Salvation.Video.Mesh = function(p_VideoDriver, p_Name) {
+    this.Type           = "Salvation.Video.Mesh";
+    this.VideoDriver    = p_VideoDriver;
+    this.Name           = p_Name;
+    
+    this.VertexBuffer   = (typeof Float32Array !== 'undefined') ? new Float32Array() : new Array();
+    this.ColorBuffer    = (typeof Float32Array !== 'undefined') ? new Float32Array() : new Array();
+    this.UVBuffer       = (typeof Float32Array !== 'undefined') ? new Float32Array() : new Array();
+    this.IndiceBuffer   = (typeof Uint16Array !== 'undefined') ? new Uint16Array() : new Array();
+    
+    this.VertexBufferPtr   = p_VideoDriver.Device.GlContext.createBuffer();
+    this.ColorBufferPtr    = p_VideoDriver.Device.GlContext.createBuffer();
+    this.UVBufferPtr       = p_VideoDriver.Device.GlContext.createBuffer();
+    this.IndiceBufferPtr   = p_VideoDriver.Device.GlContext.createBuffer();
+    
+    this.VertexBufferPtr.itemSize   = 3;
+    this.ColorBufferPtr.itemSize    = 4;
+    this.UVBufferPtr.itemSize       = 2;
+    this.IndiceBufferPtr.itemSize   = 1;
+    
+    // Bind class functions
+    this.Release        = Salvation.Video.Mesh_Release;
+    this.UpdateBuffers  = Salvation.Video.Mesh_UpdateBuffers;
+};
+
+// Release buffer
+Salvation.Video.Mesh_Release = function() {
+    this.VideoDriver.Device.GlContext.deleteBuffer(this.VertexBufferPtr);
+    this.VideoDriver.Device.GlContext.deleteBuffer(this.ColorBufferPtr);
+    this.VideoDriver.Device.GlContext.deleteBuffer(this.UVBufferPtr);
+    this.VideoDriver.Device.GlContext.deleteBuffer(this.IndiceBufferPtr);
+};
+
+// Commit geometry into WebGL buffers
+Salvation.Video.Mesh_UpdateBuffers = function() {
+    this.VideoDriver.Device.GlContext.bindBuffer(this.VideoDriver.Device.GlContext.ARRAY_BUFFER, this.VertexBufferPtr);
+    this.VideoDriver.Device.GlContext.bufferData(this.VideoDriver.Device.GlContext.ARRAY_BUFFER, new Float32Array(this.VertexBuffer), this.VideoDriver.Device.GlContext.STATIC_DRAW);
+    this.VertexBufferPtr.numItems = this.VertexBuffer.length / 3;
+
+    this.VideoDriver.Device.GlContext.bindBuffer(this.VideoDriver.Device.GlContext.ARRAY_BUFFER, this.ColorBufferPtr);
+    this.VideoDriver.Device.GlContext.bufferData(this.VideoDriver.Device.GlContext.ARRAY_BUFFER, new Float32Array(this.ColorBuffer), this.VideoDriver.Device.GlContext.STATIC_DRAW);
+    this.ColorBufferPtr.numItems = this.ColorBuffer.length / 4;
+
+    this.VideoDriver.Device.GlContext.bindBuffer(this.VideoDriver.Device.GlContext.ARRAY_BUFFER, this.UVBufferPtr);
+    this.VideoDriver.Device.GlContext.bufferData(this.VideoDriver.Device.GlContext.ARRAY_BUFFER, new Float32Array(this.UVBuffer), this.VideoDriver.Device.GlContext.STATIC_DRAW);
+    this.UVBufferPtr.numItems = this.UVBuffer.length / 2;
+
+    this.VideoDriver.Device.GlContext.bindBuffer(this.VideoDriver.Device.GlContext.ELEMENT_ARRAY_BUFFER, this.IndiceBufferPtr);
+    this.VideoDriver.Device.GlContext.bufferData(this.VideoDriver.Device.GlContext.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.IndiceBuffer), this.VideoDriver.Device.GlContext.STATIC_DRAW);
+    this.IndiceBufferPtr.numItems = this.IndiceBuffer.length;
+};
+
+/*
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+ DefaultFragmentProgram = "precision mediump float;"
+DefaultFragmentProgram += "varying vec4 Color;";
+//DefaultFragmentProgram += "varying vec2 TextureCoord;";
+//DefaultFragmentProgram += "uniform float UseTexture;";
+//DefaultFragmentProgram += "uniform sampler2D Sampler;";
+DefaultFragmentProgram += "void main(void) {";
+//DefaultFragmentProgram += "     vec4 l_TextureColor = texture2D(Sampler, TextureCoord) * UseTexture;";
+//DefaultFragmentProgram += "     vec4 l_VertColor	= Color * (1.0 - UseTexture); ";
+//DefaultFragmentProgram += "     gl_FragColor = l_TextureColor + l_VertColor;";
+DefaultFragmentProgram += "     gl_FragColor = Color;";
+DefaultFragmentProgram += "}";
+
+ DefaultVertexProgram = "attribute vec3 VertexPosition;";
+DefaultVertexProgram += "attribute vec4 VertexColor;"; 
+//DefaultVertexProgram += "attribute vec2 VertexTextureCoord;"; 
+DefaultVertexProgram += "uniform mat4 ModelViewMatrix;"; 
+DefaultVertexProgram += "uniform mat4 ProjectionMatrix;"; 
+DefaultVertexProgram += "varying vec4 Color;"; 
+//DefaultVertexProgram += "varying vec2 TextureCoord;"; 
+DefaultVertexProgram += "void main(void) {"; 
+DefaultVertexProgram += "       gl_Position 	= ProjectionMatrix * ModelViewMatrix * vec4(VertexPosition, 1.0);"; 
+//DefaultVertexProgram += "       TextureCoord 	= VertexTextureCoord;"; 
+DefaultVertexProgram += "       Color 			= VertexColor;"; 
+DefaultVertexProgram += "}"; 
+
+// Default program variable init function
+DefaultProgramInitFunction = function() {
+    this.a_VertexPosition       = this.GetAttributeLocation("VertexPosition");
+    this.a_VertexColor          = this.GetAttributeLocation("VertexColor");
+    this.u_ModelViewMatrix      = this.GetUniformLocation("ModelViewMatrix");
+    this.u_ProjectionMatrix     = this.GetUniformLocation("ProjectionMatrix");
+    
+    this.SetIsArrayAttribute(this.a_VertexPosition, true);
+    this.SetIsArrayAttribute(this.a_VertexColor, true);
+}
+// Default program variable bind function
+DefaultProgramBindFunction = function(p_Mesh) {
+    this.SetUniformMatrix4FV(this.u_ModelViewMatrix, false, this.VideoDriver.ModelViewMatrix);
+    this.SetUniformMatrix4FV(this.u_ProjectionMatrix, false, this.VideoDriver.ProjectionMatrix);
+    
+    this.SetAttributeVertexPointerFloat(this.a_VertexPosition, p_Mesh.VertexBufferPtr);
+    this.SetAttributeVertexPointerFloat(this.a_VertexColor, p_Mesh.ColorBufferPtr);
+}
+
+
+// Shader constructor
+Salvation.Video.Shader = function(p_VideoDriver, p_FragStr, p_VertStr) {
+    this.Type           = "Salvation.Video.Shader";
+    this.VideoDriver    = p_VideoDriver;
+    this.Fragment       = p_VideoDriver.Device.GlContext.createShader(p_VideoDriver.Device.GlContext.FRAGMENT_SHADER);
+    this.Vertex         = p_VideoDriver.Device.GlContext.createShader(p_VideoDriver.Device.GlContext.VERTEX_SHADER);
+    this.Program        = p_VideoDriver.Device.GlContext.createProgram();
+    
+    // Compile fragment 
+    p_VideoDriver.Device.GlContext.shaderSource(this.Fragment, p_FragStr);
+    p_VideoDriver.Device.GlContext.compileShader(this.Fragment);
+    
+    if (!p_VideoDriver.Device.GlContext.getShaderParameter(this.Fragment, p_VideoDriver.Device.GlContext.COMPILE_STATUS)) 
+    {
+        this.FragmentErrorStr   = p_VideoDriver.Device.GlContext.getShaderInfoLog(this.Fragment);
+        this.IsFramgmentCreated = false;
+    }
+    else
+    {
+        this.IsFramgmentCreated = true;
+    }
+
+    // Compile Vertex 
+    p_VideoDriver.Device.GlContext.shaderSource(this.Vertex, p_VertStr);
+    p_VideoDriver.Device.GlContext.compileShader(this.Vertex);
+    
+    if (!p_VideoDriver.Device.GlContext.getShaderParameter(this.Vertex, p_VideoDriver.Device.GlContext.COMPILE_STATUS)) 
+    {
+        this.VertexErrorStr     = p_VideoDriver.Device.GlContext.getShaderInfoLog(this.Vertex);
+        this.IsVertexCreated    = false;
+    }
+    else
+    {
+        this.IsVertexCreated = true;
+    }
+    
+    // Now we make the program and link vert + frag into
+    p_VideoDriver.Device.GlContext.attachShader(this.Program, this.Vertex);
+    p_VideoDriver.Device.GlContext.attachShader(this.Program, this.Fragment);
+    p_VideoDriver.Device.GlContext.linkProgram(this.Program);
+
+    if (!p_VideoDriver.Device.GlContext.getProgramParameter(this.Program, p_VideoDriver.Device.GlContext.LINK_STATUS))
+        this.IsProgramCreated = false;
+    else
+        this.IsProgramCreated = true;
+
+    // Bind class functions
+    this.IsCreated                          = Salvation.Video.Shader_IsCreated;
+    this.SetIsArrayAttribute                = Salvation.Video.Shader_SetIsArrayAttribute;
+    this.GetAttributeLocation               = Salvation.Video.Shader_GetAttributeLocation;
+    this.GetUniformLocation                 = Salvation.Video.Shader_GetUniformLocation;
+    this.SetUniformMatrix4FV                = Salvation.Video.Shader_SetUniformMatrix4FV;
+    this.SetAttributeVertexPointerFloat     = Salvation.Video.Shader_SetAttributeVertexPointerFloat;
+    this.Init                               = function() {};
+    this.Bind                               = function(p_Mesh) {};
+};
+
+// Check if shader is correctly created
+Salvation.Video.Shader_IsCreated = function() {
+    return this.IsProgramCreated && this.IsVertexCreated && this.IsFramgmentCreated;
+}
+
+// Enable array accessor for an attribute
+Salvation.Video.Shader_SetIsArrayAttribute = function(p_Location, p_State) {
+    if (p_State)
+        this.VideoDriver.Device.GlContext.enableVertexAttribArray(p_Location);
+    else
+        this.VideoDriver.Device.GlContext.disableVertexAttribArray(p_Location);
+}
+
+// Get attribute var location
+Salvation.Video.Shader_GetAttributeLocation = function(p_Name) {
+    return this.VideoDriver.Device.GlContext.getAttribLocation(this.Program, p_Name);
+};
+// Get uniform var location
+Salvation.Video.Shader_GetUniformLocation = function(p_Name) {
+    return this.VideoDriver.Device.GlContext.getUniformLocation(this.Program, p_Name);
+};
+
+// Set uniform matrix 4fv
+Salvation.Video.Shader_SetUniformMatrix4FV = function(p_Location, p_Transpose, p_Matrix) {
+    this.VideoDriver.Device.GlContext.uniformMatrix4fv(p_Location, p_Transpose, p_Matrix.Values);
+};
+
+// Set vertex attribute pointer
+Salvation.Video.Shader_SetAttributeVertexPointerFloat = function(p_Location, p_Pointer) {
+    this.VideoDriver.Device.GlContext.bindBuffer(this.VideoDriver.Device.GlContext.ARRAY_BUFFER, p_Pointer);
+    this.VideoDriver.Device.GlContext.vertexAttribPointer(p_Location, p_Pointer.itemSize, this.VideoDriver.Device.GlContext.FLOAT, false, 0, 0);
 };
 

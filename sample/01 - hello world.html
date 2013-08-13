@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title>Salvation WebGL 01 - Hello world</title>
-		<script type="text/javascript" src="../dist/engine-min.js"></script>
+		<script type="text/javascript" src="../dist/engine.js"></script>
 		<script>
 			var g_Device = 0;
 			
@@ -17,9 +17,96 @@
 					alert("Failed to create render canvas : " + g_Device.ErrorStr);
 					return;
 				}
+				
+				// Create mesh and fill vertex & color buffer
+				l_Mesh = g_Device.VideoDriver.CreateMesh("HelloWorldMesh");
+				l_Mesh.VertexBuffer = [
+					// Front face
+					-1.0, -1.0,  1.0,
+					 1.0, -1.0,  1.0,
+					 1.0,  1.0,  1.0,
+					-1.0,  1.0,  1.0,
 
+					// Back face
+					-1.0, -1.0, -1.0,
+					-1.0,  1.0, -1.0,
+					 1.0,  1.0, -1.0,
+					 1.0, -1.0, -1.0,
+
+					// Top face
+					-1.0,  1.0, -1.0,
+					-1.0,  1.0,  1.0,
+					 1.0,  1.0,  1.0,
+					 1.0,  1.0, -1.0,
+
+					// Bottom face
+					-1.0, -1.0, -1.0,
+					 1.0, -1.0, -1.0,
+					 1.0, -1.0,  1.0,
+					-1.0, -1.0,  1.0,
+
+					// Right face
+					 1.0, -1.0, -1.0,
+					 1.0,  1.0, -1.0,
+					 1.0,  1.0,  1.0,
+					 1.0, -1.0,  1.0,
+
+					// Left face
+					-1.0, -1.0, -1.0,
+					-1.0, -1.0,  1.0,
+					-1.0,  1.0,  1.0,
+					-1.0,  1.0, -1.0,
+				];
+				l_Mesh.ColorBuffer = [
+					1.0, 0.0, 0.0, 1.0,
+					0.0, 1.0, 0.0, 1.0,
+					0.0, 0.0, 1.0, 1.0,
+					0.0, 0.0, 1.0, 1.0,
+					
+					1.0, 0.0, 0.0, 1.0,
+					0.0, 1.0, 0.0, 1.0,
+					0.0, 0.0, 1.0, 1.0,
+					0.0, 0.0, 1.0, 1.0,
+					
+					1.0, 0.0, 0.0, 1.0,
+					0.0, 1.0, 0.0, 1.0,
+					0.0, 0.0, 1.0, 1.0,
+					0.0, 0.0, 1.0, 1.0,
+					
+					1.0, 0.0, 0.0, 1.0,
+					0.0, 1.0, 0.0, 1.0,
+					0.0, 0.0, 1.0, 1.0,
+					0.0, 0.0, 1.0, 1.0,
+					
+					1.0, 0.0, 0.0, 1.0,
+					0.0, 1.0, 0.0, 1.0,
+					0.0, 0.0, 1.0, 1.0,
+					0.0, 0.0, 1.0, 1.0,
+					
+					1.0, 0.0, 0.0, 1.0,
+					0.0, 1.0, 0.0, 1.0,
+					0.0, 0.0, 1.0, 1.0,
+					0.0, 0.0, 1.0, 1.0,
+				]; 
+				l_Mesh.IndiceBuffer = [
+					0, 1, 2,      0, 2, 3,    // Front face
+					4, 5, 6,      4, 6, 7,    // Back face
+					8, 9, 10,     8, 10, 11,  // Top face
+					12, 13, 14,   12, 14, 15, // Bottom face
+					16, 17, 18,   16, 18, 19, // Right face
+					20, 21, 22,   20, 22, 23  // Left face
+				];
+				
+				l_Mesh.UpdateBuffers();
+				
+				l_Material 	= new Salvation.Video.Material(g_Device.VideoDriver);
+				l_Position 	= new Salvation.Core.Vector3(-1.5, 0, -7);
+				l_Rotation 	= new Salvation.Core.Vector3(0, 0, 0);
+				l_Scale 	= new Salvation.Core.Vector3(1, 1, 1);
+				
 				// Render one frame
 				g_Device.VideoDriver.BeginScene();
+				g_Device.VideoDriver.DrawMesh(l_Mesh, l_Material, l_Position, l_Scale, l_Rotation);
 				g_Device.VideoDriver.EndScene();
 			}
 		</script>

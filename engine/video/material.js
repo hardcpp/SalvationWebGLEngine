@@ -13,21 +13,10 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
  
-// Vector3 constructor
-Salvation.Core.Vector3 = function(p_X, p_Y, p_Z) {
-    this.Type = "Salvation.Core.Vector3";
-
-    if (p_Z !== undefined)
-    {
-        this.X = p_X;
-        this.Y = p_Y;
-        this.Z = p_Z;
-    }
-    else
-    {
-        this.X = 0;
-        this.Y = 0;
-        this.Z = 0;
-    }
+// Material constructor
+Salvation.Video.Material = function(p_VideoDriver) {
+    this.Type           = "Salvation.Video.Material";
+    this.Texture        = 0;
+    this.Shader         = p_VideoDriver.GetDefaultShader();
 };
 

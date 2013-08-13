@@ -26,12 +26,21 @@ Salvation.Video.Driver = function(p_Device) {
     p_Device.GlContext.enable(p_Device.GlContext.DEPTH_TEST);
     p_Device.GlContext.clearColor(this.ClearColor.R, this.ClearColor.G, this.ClearColor.B, this.ClearColor.A);
     
+    // Create default shader
+    this.DefaultShader = new Salvation.Video.Shader(this, DefaultFragmentProgram, DefaultVertexProgram);
+    this.DefaultShader.Init = DefaultProgramInitFunction;
+    this.DefaultShader.Bind = DefaultProgramBindFunction;
+    this.DefaultShader.Init();
+
     // Bind class functions
     this.BeginScene         = Salvation.Video.Driver_BeginScene;
     this.EndScene           = Salvation.Video.Driver_EndScene;
+    this.DrawMesh           = Salvation.Video.Driver_DrawMesh;
     this.PushModelView      = Salvation.Video.Driver_PushModelView;
     this.PopModelView       = Salvation.Video.Driver_PopModelView;
     this.UpdateClearColor   = Salvation.Video.Driver_UpdateClearColor;
+    this.GetDefaultShader   = Salvation.Video.Driver_GetDefaultShader;
+    this.CreateMesh         = Salvation.Video.Driver_CreateMesh;
 };
 
 // Prepare frame rendering
@@ -40,6 +49,7 @@ Salvation.Video.Driver_BeginScene = function() {
     this.Device.GlContext.clear(this.Device.GlContext.COLOR_BUFFER_BIT | this.Device.GlContext.DEPTH_BUFFER_BIT);
     
     this.ProjectionMatrix.Perspective(45, this.Device.GlContext.viewportWidth / this.Device.GlContext.viewportHeight, 0.1, 100.0);
+    this.ModelViewMatrix.Identity();
 };
 // End frame rendering
 Salvation.Video.Driver_EndScene = function() {
@@ -47,14 +57,25 @@ Salvation.Video.Driver_EndScene = function() {
 };
 
 // Draw a mesh
-Salvation.Video.Driver_DrawMesh = function(p_Mesh) {
+Salvation.Video.Driver_DrawMesh = function(p_Mesh, p_Material, p_Position, p_Scale, p_Rotation) {
     this.PushModelView();
 
-    this.ModelViewMatrix.RotateXYZ(p_Mesh.Rotation.X * DegToRadCoefficient, p_Mesh.Rotation.Y * DegToRadCoefficient, p_Mesh.Rotation.Z * DegToRadCoefficient);
-    this.ModelViewMatrix.Translate(p_Mesh.Position.X, p_Mesh.Position.Y, p_Mesh.Position.Z);
-    this.ModelViewMatrix.Scale(p_Mesh.Scale.X, p_Mesh.Scale.Y, p_Mesh.Scale.Z);
+    // Do local transformation
+    this.ModelViewMatrix.RotateXYZ(p_Rotation.X * DegToRadCoefficient, p_Rotation.Y * DegToRadCoefficient, p_Rotation.Z * DegToRadCoefficient);
+    this.ModelViewMatrix.Translate(p_Position.X, p_Position.Y, p_Position.Z);
+    this.ModelViewMatrix.Scale(p_Scale.X, p_Scale.Y, p_Scale.Z);
+
+    // Bind shader
+    this.Device.GlContext.useProgram(p_Material.Shader.Program);
     
-    // todo
+    // Bind values to the shader
+    p_Material.Shader.Bind(p_Mesh);
+    
+    // Bind indices array
+    this.Device.GlContext.bindBuffer(this.Device.GlContext.ELEMENT_ARRAY_BUFFER, p_Mesh.IndiceBufferPtr);
+    
+    // Draw the mesh
+    this.Device.GlContext.drawElements(this.Device.GlContext.TRIANGLES, p_Mesh.IndiceBufferPtr.numItems, this.Device.GlContext.UNSIGNED_SHORT, 0);
     
     this.PopModelView();
 };
@@ -79,4 +100,14 @@ Salvation.Video.Driver_PopModelView = function() {
 Salvation.Video.Driver_UpdateClearColor = function() {
     this.Device.GlContext.clearColor(this.ClearColor.R, this.ClearColor.G, this.ClearColor.B, this.ClearColor.A);
 };
+
+// Return default shader program
+Salvation.Video.Driver_GetDefaultShader = function() {
+    return this.DefaultShader;
+}
+
+// Create an empty mesh
+Salvation.Video.Driver_CreateMesh = function(p_Name) {
+    return new Salvation.Video.Mesh(this, p_Name);
+}
 

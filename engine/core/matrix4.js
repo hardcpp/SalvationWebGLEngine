@@ -16,8 +16,8 @@
  
 // Matrix 4 constructor
 Salvation.Core.Matrix4 = function() {
-    this.Type         = "Salvation.Core.Matrix4";
-    this.Values     = (typeof Float32Array !== 'undefined') ? new Float32Array(16) : new Array(16);
+    this.Type   = "Salvation.Core.Matrix4";
+    this.Values = (typeof Float32Array !== 'undefined') ? new Float32Array(16) : new Array(16);
     
     for (l_I = 0 ; l_I < 16 ; ++l_I)
         this.Values[l_I] = 0;
@@ -91,16 +91,16 @@ Salvation.Core.Matrix4_Rotate = function(p_Rad, p_Axis) {
     var l_B22 = l_ZAxis * l_ZAxis * l_T + l_C;
 
     // Perform rotation-specific matrix multiplication
-    this.Values[0]      = this.Values[0] * l_B00 + this.Values[4] * l_B01 + this.Values[8]     * l_B02;
-    this.Values[1]      = this.Values[1] * l_B00 + this.Values[5] * l_B01 + this.Values[9]     * l_B02;
+    this.Values[0]      = this.Values[0] * l_B00 + this.Values[4] * l_B01 + this.Values[8]  * l_B02;
+    this.Values[1]      = this.Values[1] * l_B00 + this.Values[5] * l_B01 + this.Values[9]  * l_B02;
     this.Values[2]      = this.Values[2] * l_B00 + this.Values[6] * l_B01 + this.Values[10] * l_B02;
     this.Values[3]      = this.Values[3] * l_B00 + this.Values[7] * l_B01 + this.Values[11] * l_B02;
-    this.Values[4]      = this.Values[0] * l_B10 + this.Values[4] * l_B11 + this.Values[8]     * l_B12;
-    this.Values[5]      = this.Values[1] * l_B10 + this.Values[5] * l_B11 + this.Values[9]     * l_B12;
+    this.Values[4]      = this.Values[0] * l_B10 + this.Values[4] * l_B11 + this.Values[8]  * l_B12;
+    this.Values[5]      = this.Values[1] * l_B10 + this.Values[5] * l_B11 + this.Values[9]  * l_B12;
     this.Values[6]      = this.Values[2] * l_B10 + this.Values[6] * l_B11 + this.Values[10] * l_B12;
     this.Values[7]      = this.Values[3] * l_B10 + this.Values[7] * l_B11 + this.Values[11] * l_B12;
-    this.Values[8]      = this.Values[0] * l_B20 + this.Values[4] * l_B21 + this.Values[8]     * l_B22;
-    this.Values[9]      = this.Values[1] * l_B20 + this.Values[5] * l_B21 + this.Values[9]     * l_B22;
+    this.Values[8]      = this.Values[0] * l_B20 + this.Values[4] * l_B21 + this.Values[8]  * l_B22;
+    this.Values[9]      = this.Values[1] * l_B20 + this.Values[5] * l_B21 + this.Values[9]  * l_B22;
     this.Values[10]     = this.Values[2] * l_B20 + this.Values[6] * l_B21 + this.Values[10] * l_B22;
     this.Values[11]     = this.Values[3] * l_B20 + this.Values[7] * l_B21 + this.Values[11] * l_B22;
 }
@@ -113,8 +113,8 @@ Salvation.Core.Matrix4_RotateXYZ = function(p_X, p_Y, p_Z) {
 
 // Translate matrix4
 Salvation.Core.Matrix4_Translate = function(p_X, p_Y, p_Z) {
-    this.Values[12] = this.Values[0] * p_X + this.Values[4] * p_Y + this.Values[8] * p_Z + this.Values[12];
-    this.Values[13] = this.Values[1] * p_X + this.Values[5] * p_Y + this.Values[9] * p_Z + this.Values[13];
+    this.Values[12] = this.Values[0] * p_X + this.Values[4] * p_Y + this.Values[8]  * p_Z + this.Values[12];
+    this.Values[13] = this.Values[1] * p_X + this.Values[5] * p_Y + this.Values[9]  * p_Z + this.Values[13];
     this.Values[14] = this.Values[2] * p_X + this.Values[6] * p_Y + this.Values[10] * p_Z + this.Values[14];
     this.Values[15] = this.Values[3] * p_X + this.Values[7] * p_Y + this.Values[11] * p_Z + this.Values[15];
 }
