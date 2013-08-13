@@ -17,19 +17,22 @@
 Salvation.Scene.Manager = function(p_Device) {
     this.Type           = "Salvation.Scene.Manager";
     this.Device         = p_Device;
-    this.Nodes          = [] ;
+    this.Nodes          = new Array();
     
     // Bind class functions
     this.DrawAll            = Salvation.Scene.Manager_DrawAll;
     this.AddCubeSceneNode   = Salvation.Scene.Manager_AddCubeSceneNode;
 };
 
+// Draw all scene node
 Salvation.Scene.Manager_DrawAll = function() {
-    for (l_I = 0 ; l_I < this.Nodes.length ; ++l_I)
+    for (var l_I = 0 ; l_I < this.Nodes.length ; ++l_I)
+    {
         if (this.Nodes[l_I].Draw)
             this.Nodes[l_I].Draw();
         else
             this.Nodes[l_I].Node.Draw();
+    }
 };
 
 // Create a cube scene node
