@@ -21,3 +21,4 @@ Salvation.Video     = {};
 Salvation.Scene     = {};
 Salvation.Gui       = {};
 
+var DegToRadCoefficient = Math.PI / 180;

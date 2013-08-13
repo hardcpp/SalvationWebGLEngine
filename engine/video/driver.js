@@ -15,13 +15,13 @@
 
 // Video driver constructor
 Salvation.Video.Driver = function(p_Device) {
-    this.Type        = "Salvation.Video.Driver";
+    this.Type       = "Salvation.Video.Driver";
     this.Device     = p_Device;
     this.ClearColor = new Salvation.Video.Color(0.0, 0.0, 0.0, 1.0);
     
-    this.ProjectionMatrix     = new Salvation.Core.Matrix4();
-    this.ModelViewMatrix     = new Salvation.Core.Matrix4();
-    this.ModelViewStack        = [];
+    this.ProjectionMatrix   = new Salvation.Core.Matrix4();
+    this.ModelViewMatrix    = new Salvation.Core.Matrix4();
+    this.ModelViewStack     = [];
 
     p_Device.GlContext.enable(p_Device.GlContext.DEPTH_TEST);
     p_Device.GlContext.clearColor(this.ClearColor.R, this.ClearColor.G, this.ClearColor.B, this.ClearColor.A);
@@ -50,9 +50,7 @@ Salvation.Video.Driver_EndScene = function() {
 Salvation.Video.Driver_DrawMesh = function(p_Mesh) {
     this.PushModelView();
 
-    this.ModelViewMatrix.Rotate(p_Mesh.Rotation.X * Math.PI / 180, [1, 0, 0]);
-    this.ModelViewMatrix.Rotate(p_Mesh.Rotation.Y * Math.PI / 180, [0, 1, 0]);
-    this.ModelViewMatrix.Rotate(p_Mesh.Rotation.Z * Math.PI / 180, [0, 0, 1]);
+    this.ModelViewMatrix.RotateXYZ(p_Mesh.Rotation.X * DegToRadCoefficient, p_Mesh.Rotation.Y * DegToRadCoefficient, p_Mesh.Rotation.Z * DegToRadCoefficient);
     this.ModelViewMatrix.Translate(p_Mesh.Position.X, p_Mesh.Position.Y, p_Mesh.Position.Z);
     this.ModelViewMatrix.Scale(p_Mesh.Scale.X, p_Mesh.Scale.Y, p_Mesh.Scale.Z);
     

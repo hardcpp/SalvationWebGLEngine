@@ -26,6 +26,7 @@ Salvation.Core.Matrix4 = function() {
     this.Import         = Salvation.Core.Matrix4_Import;
     this.Perspective    = Salvation.Core.Matrix4_Perspective;
     this.Rotate         = Salvation.Core.Matrix4_Rotate;
+    this.RotateXYZ      = Salvation.Core.Matrix4_RotateXYZ;
     this.Translate      = Salvation.Core.Matrix4_Translate
     this.Scale          = Salvation.Core.Matrix4_Scale 
     this.Identity       = Salvation.Core.Matrix4_Identity
@@ -102,6 +103,12 @@ Salvation.Core.Matrix4_Rotate = function(p_Rad, p_Axis) {
     this.Values[9]      = this.Values[1] * l_B20 + this.Values[5] * l_B21 + this.Values[9]     * l_B22;
     this.Values[10]     = this.Values[2] * l_B20 + this.Values[6] * l_B21 + this.Values[10] * l_B22;
     this.Values[11]     = this.Values[3] * l_B20 + this.Values[7] * l_B21 + this.Values[11] * l_B22;
+}
+// Rotate on all axis (in radian)
+Salvation.Core.Matrix4_RotateXYZ = function(p_X, p_Y, p_Z) {
+    this.Rotate(p_X, [1, 0, 0]);
+    this.Rotate(p_Y, [0, 1, 0]);
+    this.Rotate(p_Z, [0, 0, 1]);
 }
 
 // Translate matrix4
