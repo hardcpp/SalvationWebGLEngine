@@ -69,6 +69,9 @@ Salvation.Device = function(p_Canvas) {
         this.VideoDriver = new Salvation.Video.Driver(this);
         this.VideoDriver.BeginScene();
         this.VideoDriver.EndScene();
+        
+        // Create scene manager
+        this.SceneManager = new Salvation.Scene.Manager(this);
     }
 };
 

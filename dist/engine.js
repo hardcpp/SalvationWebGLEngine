@@ -92,6 +92,9 @@ Salvation.Device = function(p_Canvas) {
         this.VideoDriver = new Salvation.Video.Driver(this);
         this.VideoDriver.BeginScene();
         this.VideoDriver.EndScene();
+        
+        // Create scene manager
+        this.SceneManager = new Salvation.Scene.Manager(this);
     }
 };
 
@@ -356,6 +359,7 @@ Salvation.Video.Driver = function(p_Device) {
     this.UpdateClearColor   = Salvation.Video.Driver_UpdateClearColor;
     this.GetDefaultShader   = Salvation.Video.Driver_GetDefaultShader;
     this.CreateMesh         = Salvation.Video.Driver_CreateMesh;
+    this.CreateMaterial     = Salvation.Video.Driver_CreateMaterial;
 };
 
 // Prepare frame rendering
@@ -376,9 +380,9 @@ Salvation.Video.Driver_DrawMesh = function(p_Mesh, p_Material, p_Position, p_Sca
     this.PushModelView();
 
     // Do local transformation
+    this.ModelViewMatrix.Scale(p_Scale.X, p_Scale.Y, p_Scale.Z);
     this.ModelViewMatrix.RotateXYZ(p_Rotation.X * DegToRadCoefficient, p_Rotation.Y * DegToRadCoefficient, p_Rotation.Z * DegToRadCoefficient);
     this.ModelViewMatrix.Translate(p_Position.X, p_Position.Y, p_Position.Z);
-    this.ModelViewMatrix.Scale(p_Scale.X, p_Scale.Y, p_Scale.Z);
 
     // Bind shader
     this.Device.GlContext.useProgram(p_Material.Shader.Program);
@@ -424,6 +428,10 @@ Salvation.Video.Driver_GetDefaultShader = function() {
 // Create an empty mesh
 Salvation.Video.Driver_CreateMesh = function(p_Name) {
     return new Salvation.Video.Mesh(this, p_Name);
+}
+// Create a material
+Salvation.Video.Driver_CreateMaterial = function() {
+    return new Salvation.Video.Material(this);
 }
 
 /*
@@ -664,5 +672,201 @@ Salvation.Video.Shader_SetUniformMatrix4FV = function(p_Location, p_Transpose, p
 Salvation.Video.Shader_SetAttributeVertexPointerFloat = function(p_Location, p_Pointer) {
     this.VideoDriver.Device.GlContext.bindBuffer(this.VideoDriver.Device.GlContext.ARRAY_BUFFER, p_Pointer);
     this.VideoDriver.Device.GlContext.vertexAttribPointer(p_Location, p_Pointer.itemSize, this.VideoDriver.Device.GlContext.FLOAT, false, 0, 0);
+};
+
+/*
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+// CubeNode constructor
+Salvation.Scene.CubeNode = function(p_SceneManager, p_Name, p_Size) {
+    this.Node = new Salvation.Scene.Node(p_SceneManager, p_Name);
+    this.Type = "Salvation.Scene.CubeNode";
+
+    this.Node.Mesh.VertexBuffer = [
+        // Front face
+        -p_Size, -p_Size,  p_Size,
+        p_Size, -p_Size,  p_Size,
+        p_Size,  p_Size,  p_Size,
+        -p_Size,  p_Size,  p_Size,
+
+        // Back face
+        -p_Size, -p_Size, -p_Size,
+        -p_Size,  p_Size, -p_Size,
+        p_Size,  p_Size, -p_Size,
+        p_Size, -p_Size, -p_Size,
+
+        // Top face
+        -p_Size,  p_Size, -p_Size,
+        -p_Size,  p_Size,  p_Size,
+        p_Size,  p_Size,  p_Size,
+        p_Size,  p_Size, -p_Size,
+
+        // Bottom face
+        -p_Size, -p_Size, -p_Size,
+        p_Size, -p_Size, -p_Size,
+        p_Size, -p_Size,  p_Size,
+        -p_Size, -p_Size,  p_Size,
+
+        // Right face
+        p_Size, -p_Size, -p_Size,
+        p_Size,  p_Size, -p_Size,
+        p_Size,  p_Size,  p_Size,
+        p_Size, -p_Size,  p_Size,
+
+        // Left face
+        -p_Size, -p_Size, -p_Size,
+        -p_Size, -p_Size,  p_Size,
+        -p_Size,  p_Size,  p_Size,
+        -p_Size,  p_Size, -p_Size,
+    ];
+    this.Node.Mesh.IndiceBuffer = [
+        0, 1, 2,      0, 2, 3,    // Front face
+        4, 5, 6,      4, 6, 7,    // Back face
+        8, 9, 10,     8, 10, 11,  // Top face
+        12, 13, 14,   12, 14, 15, // Bottom face
+        16, 17, 18,   16, 18, 19, // Right face
+        20, 21, 22,   20, 22, 23  // Left face
+    ];
+    this.Node.Mesh.UVBuffer = [
+        // Front face
+        0.0, 0.0,
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 1.0,
+
+        // Back face
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 1.0,
+        0.0, 0.0,
+
+        // Top face
+        0.0, 1.0,
+        0.0, 0.0,
+        1.0, 0.0,
+        1.0, 1.0,
+
+        // Bottom face
+        1.0, 1.0,
+        0.0, 1.0,
+        0.0, 0.0,
+        1.0, 0.0,
+
+        // Right face
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 1.0,
+        0.0, 0.0,
+
+        // Left face
+        0.0, 0.0,
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 1.0
+    ];
+    
+    var l_Colors = new Array();
+    for (l_I = 0 ; l_I < 4* 4 *6 ;)
+    {
+        l_Colors.push(0.5);
+        l_Colors.push(0.5);
+        l_Colors.push(0.5);
+        l_Colors.push(1);
+        
+        l_I += 4;
+    }
+    
+    this.Node.Mesh.ColorBuffer = new Float32Array(l_Colors);
+    this.Node.Mesh.UpdateBuffers();
+};
+
+/*
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+// Manager constructor
+Salvation.Scene.Manager = function(p_Device) {
+    this.Type           = "Salvation.Scene.Manager";
+    this.Device         = p_Device;
+    this.Nodes          = [] ;
+    
+    // Bind class functions
+    this.DrawAll            = Salvation.Scene.Manager_DrawAll;
+    this.AddCubeSceneNode   = Salvation.Scene.Manager_AddCubeSceneNode;
+};
+
+Salvation.Scene.Manager_DrawAll = function() {
+    for (l_I = 0 ; l_I < this.Nodes.length ; ++l_I)
+        if (this.Nodes[l_I].Draw)
+            this.Nodes[l_I].Draw();
+        else
+            this.Nodes[l_I].Node.Draw();
+};
+
+// Create a cube scene node
+Salvation.Scene.Manager_AddCubeSceneNode = function(p_Name, p_Size) {
+    l_Object = new Salvation.Scene.CubeNode(this, p_Name, p_Size);
+    this.Nodes.push(l_Object);
+    
+    return l_Object;
+};
+
+/*
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+// Node constructor
+Salvation.Scene.Node = function(p_SceneManager, p_Name) {
+    this.Type           = "Salvation.Scene.Node";
+    this.Name           = p_Name;
+    this.SceneManager   = p_SceneManager;
+    this.Position       = new Salvation.Core.Vector3();
+    this.Rotation       = new Salvation.Core.Vector3();
+    this.Scale          = new Salvation.Core.Vector3(1, 1, 1);
+    
+    this.Mesh       = p_SceneManager.Device.VideoDriver.CreateMesh(p_Name + "_Mesh");
+    this.Material   = p_SceneManager.Device.VideoDriver.CreateMaterial();
+    
+    // Bind class functions
+    this.Draw = Salvation.Scene.Manager_Draw;
+};
+
+// Draw scene node
+Salvation.Scene.Manager_Draw = function() {
+    this.SceneManager.Device.VideoDriver.DrawMesh(this.Mesh, this.Material, this.Position, this.Scale, this.Rotation);
 };
 

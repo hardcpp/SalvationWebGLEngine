@@ -20,6 +20,10 @@ cd ..\video
 copy /b *.js d.js
 move d.js ..\..\temp
 
+cd ..\scene
+copy /b *.js e.js
+move e.js ..\..\temp
+
 cd ..\..\temp
 
 copy /b *.js engine.js

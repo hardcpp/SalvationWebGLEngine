@@ -41,6 +41,7 @@ Salvation.Video.Driver = function(p_Device) {
     this.UpdateClearColor   = Salvation.Video.Driver_UpdateClearColor;
     this.GetDefaultShader   = Salvation.Video.Driver_GetDefaultShader;
     this.CreateMesh         = Salvation.Video.Driver_CreateMesh;
+    this.CreateMaterial     = Salvation.Video.Driver_CreateMaterial;
 };
 
 // Prepare frame rendering
@@ -61,9 +62,9 @@ Salvation.Video.Driver_DrawMesh = function(p_Mesh, p_Material, p_Position, p_Sca
     this.PushModelView();
 
     // Do local transformation
+    this.ModelViewMatrix.Scale(p_Scale.X, p_Scale.Y, p_Scale.Z);
     this.ModelViewMatrix.RotateXYZ(p_Rotation.X * DegToRadCoefficient, p_Rotation.Y * DegToRadCoefficient, p_Rotation.Z * DegToRadCoefficient);
     this.ModelViewMatrix.Translate(p_Position.X, p_Position.Y, p_Position.Z);
-    this.ModelViewMatrix.Scale(p_Scale.X, p_Scale.Y, p_Scale.Z);
 
     // Bind shader
     this.Device.GlContext.useProgram(p_Material.Shader.Program);
@@ -109,5 +110,9 @@ Salvation.Video.Driver_GetDefaultShader = function() {
 // Create an empty mesh
 Salvation.Video.Driver_CreateMesh = function(p_Name) {
     return new Salvation.Video.Mesh(this, p_Name);
+}
+// Create a material
+Salvation.Video.Driver_CreateMaterial = function() {
+    return new Salvation.Video.Material(this);
 }
 
