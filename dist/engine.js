@@ -135,16 +135,17 @@ Salvation.Core.Matrix4 = function() {
     this.Perspective    = Salvation.Core.Matrix4_Perspective;
     this.Rotate         = Salvation.Core.Matrix4_Rotate;
     this.RotateXYZ      = Salvation.Core.Matrix4_RotateXYZ;
-    this.Translate      = Salvation.Core.Matrix4_Translate
-    this.Scale          = Salvation.Core.Matrix4_Scale 
-    this.Identity       = Salvation.Core.Matrix4_Identity
+    this.Translate      = Salvation.Core.Matrix4_Translate;
+    this.Scale          = Salvation.Core.Matrix4_Scale;
+    this.Identity       = Salvation.Core.Matrix4_Identity;
+    this.Multiply       = Salvation.Core.Matrix4_Multiply;
 };
 
 // Import values from an other matrix4
 Salvation.Core.Matrix4_Import = function(p_Src) {
     for (l_I = 0 ; l_I < 16 ; ++l_I)
         this.Values[l_I] = p_Src.Values[l_I];
-}
+};
 
 // Set perspective matrix4
 Salvation.Core.Matrix4_Perspective = function(p_Fovy, p_Aspect, p_Near, p_Far) {
@@ -167,7 +168,7 @@ Salvation.Core.Matrix4_Perspective = function(p_Fovy, p_Aspect, p_Near, p_Far) {
     this.Values[13] = 0;
     this.Values[14] = (2 * p_Far * p_Near) * l_NF;
     this.Values[15] = 0;
-}
+};
 
 // Rotate on axis
 Salvation.Core.Matrix4_Rotate = function(p_Rad, p_Axis) {
@@ -199,25 +200,33 @@ Salvation.Core.Matrix4_Rotate = function(p_Rad, p_Axis) {
     var l_B22 = l_ZAxis * l_ZAxis * l_T + l_C;
 
     // Perform rotation-specific matrix multiplication
-    this.Values[0]      = this.Values[0] * l_B00 + this.Values[4] * l_B01 + this.Values[8]  * l_B02;
-    this.Values[1]      = this.Values[1] * l_B00 + this.Values[5] * l_B01 + this.Values[9]  * l_B02;
-    this.Values[2]      = this.Values[2] * l_B00 + this.Values[6] * l_B01 + this.Values[10] * l_B02;
-    this.Values[3]      = this.Values[3] * l_B00 + this.Values[7] * l_B01 + this.Values[11] * l_B02;
-    this.Values[4]      = this.Values[0] * l_B10 + this.Values[4] * l_B11 + this.Values[8]  * l_B12;
-    this.Values[5]      = this.Values[1] * l_B10 + this.Values[5] * l_B11 + this.Values[9]  * l_B12;
-    this.Values[6]      = this.Values[2] * l_B10 + this.Values[6] * l_B11 + this.Values[10] * l_B12;
-    this.Values[7]      = this.Values[3] * l_B10 + this.Values[7] * l_B11 + this.Values[11] * l_B12;
-    this.Values[8]      = this.Values[0] * l_B20 + this.Values[4] * l_B21 + this.Values[8]  * l_B22;
-    this.Values[9]      = this.Values[1] * l_B20 + this.Values[5] * l_B21 + this.Values[9]  * l_B22;
-    this.Values[10]     = this.Values[2] * l_B20 + this.Values[6] * l_B21 + this.Values[10] * l_B22;
-    this.Values[11]     = this.Values[3] * l_B20 + this.Values[7] * l_B21 + this.Values[11] * l_B22;
-}
+    var l_Values = (typeof Float32Array !== 'undefined') ? new Float32Array(16) : new Array(16);
+    
+    l_Values[0]      = this.Values[0] * l_B00 + this.Values[4] * l_B01 + this.Values[8]  * l_B02;
+    l_Values[1]      = this.Values[1] * l_B00 + this.Values[5] * l_B01 + this.Values[9]  * l_B02;
+    l_Values[2]      = this.Values[2] * l_B00 + this.Values[6] * l_B01 + this.Values[10] * l_B02;
+    l_Values[3]      = this.Values[3] * l_B00 + this.Values[7] * l_B01 + this.Values[11] * l_B02;
+    l_Values[4]      = this.Values[0] * l_B10 + this.Values[4] * l_B11 + this.Values[8]  * l_B12;
+    l_Values[5]      = this.Values[1] * l_B10 + this.Values[5] * l_B11 + this.Values[9]  * l_B12;
+    l_Values[6]      = this.Values[2] * l_B10 + this.Values[6] * l_B11 + this.Values[10] * l_B12;
+    l_Values[7]      = this.Values[3] * l_B10 + this.Values[7] * l_B11 + this.Values[11] * l_B12;
+    l_Values[8]      = this.Values[0] * l_B20 + this.Values[4] * l_B21 + this.Values[8]  * l_B22;
+    l_Values[9]      = this.Values[1] * l_B20 + this.Values[5] * l_B21 + this.Values[9]  * l_B22;
+    l_Values[10]     = this.Values[2] * l_B20 + this.Values[6] * l_B21 + this.Values[10] * l_B22;
+    l_Values[11]     = this.Values[3] * l_B20 + this.Values[7] * l_B21 + this.Values[11] * l_B22;
+    l_Values[12]     = this.Values[12];
+    l_Values[13]     = this.Values[13];
+    l_Values[14]     = this.Values[14];
+    l_Values[15]     = this.Values[15];
+    
+    this.Values = l_Values;
+};
 // Rotate on all axis (in radian)
 Salvation.Core.Matrix4_RotateXYZ = function(p_X, p_Y, p_Z) {
     this.Rotate(p_X, [1, 0, 0]);
     this.Rotate(p_Y, [0, 1, 0]);
     this.Rotate(p_Z, [0, 0, 1]);
-}
+};
 
 // Translate matrix4
 Salvation.Core.Matrix4_Translate = function(p_X, p_Y, p_Z) {
@@ -225,7 +234,7 @@ Salvation.Core.Matrix4_Translate = function(p_X, p_Y, p_Z) {
     this.Values[13] = this.Values[1] * p_X + this.Values[5] * p_Y + this.Values[9]  * p_Z + this.Values[13];
     this.Values[14] = this.Values[2] * p_X + this.Values[6] * p_Y + this.Values[10] * p_Z + this.Values[14];
     this.Values[15] = this.Values[3] * p_X + this.Values[7] * p_Y + this.Values[11] * p_Z + this.Values[15];
-}
+};
 
 // Scale matrix4
 Salvation.Core.Matrix4_Scale = function(p_X, p_Y, p_Z) {
@@ -235,18 +244,45 @@ Salvation.Core.Matrix4_Scale = function(p_X, p_Y, p_Z) {
         this.Values[l_I] *= p_Y;
     for (l_I = 8 ; l_I < 12 ; ++l_I)
         this.Values[l_I] *= p_Z;    
-}
+};
 
 // Set to identity
-Salvation.Core.Matrix4_Identity = function(p_X, p_Y, p_Z) {
+Salvation.Core.Matrix4_Identity = function() {
     for (l_I = 0 ; l_I < 16 ; ++l_I)
-        this.Values[l_I] *= 0;
+        this.Values[l_I] = 0;
     
     this.Values[0]      = 1;
     this.Values[5]      = 1;
     this.Values[10]     = 1;
     this.Values[15]     = 1;
-}
+};
+
+// Multiply with other matrix4
+Salvation.Core.Matrix4_Multiply = function(p_Other) {
+    var l_Values = (typeof Float32Array !== 'undefined') ? new Float32Array(16) : new Array(16);
+
+    l_Values[0]  = p_Other.Values[0]*this.Values[0]  + p_Other.Values[1]*this.Values[4]  + p_Other.Values[2]*this.Values[8]      + p_Other.Values[3]*this.Values[12];
+    l_Values[1]  = p_Other.Values[0]*this.Values[1]  + p_Other.Values[1]*this.Values[5]  + p_Other.Values[2]*this.Values[9]      + p_Other.Values[3]*this.Values[13];
+    l_Values[2]  = p_Other.Values[0]*this.Values[2]  + p_Other.Values[1]*this.Values[6]  + p_Other.Values[2]*this.Values[10]     + p_Other.Values[3]*this.Values[14];
+    l_Values[3]  = p_Other.Values[0]*this.Values[3]  + p_Other.Values[1]*this.Values[7]  + p_Other.Values[2]*this.Values[11]     + p_Other.Values[3]*this.Values[15];
+    
+    l_Values[4]  = p_Other.Values[4]*this.Values[0]  + p_Other.Values[5]*this.Values[4]  + p_Other.Values[6]*this.Values[8]      + p_Other.Values[7]*this.Values[12];
+    l_Values[5]  = p_Other.Values[4]*this.Values[1]  + p_Other.Values[5]*this.Values[5]  + p_Other.Values[6]*this.Values[9]      + p_Other.Values[7]*this.Values[13];
+    l_Values[6]  = p_Other.Values[4]*this.Values[2]  + p_Other.Values[5]*this.Values[6]  + p_Other.Values[6]*this.Values[10]     + p_Other.Values[7]*this.Values[14];
+    l_Values[7]  = p_Other.Values[4]*this.Values[3]  + p_Other.Values[5]*this.Values[7]  + p_Other.Values[6]*this.Values[11]     + p_Other.Values[7]*this.Values[15];
+    
+    l_Values[8]  = p_Other.Values[8]*this.Values[0]  + p_Other.Values[9]*this.Values[4]  + p_Other.Values[10]*this.Values[8]     + p_Other.Values[11]*this.Values[12];
+    l_Values[9]  = p_Other.Values[8]*this.Values[1]  + p_Other.Values[9]*this.Values[5]  + p_Other.Values[10]*this.Values[9]     + p_Other.Values[11]*this.Values[13];
+    l_Values[10] = p_Other.Values[8]*this.Values[2]  + p_Other.Values[9]*this.Values[6]  + p_Other.Values[10]*this.Values[10]    + p_Other.Values[11]*this.Values[14];
+    l_Values[11] = p_Other.Values[8]*this.Values[3]  + p_Other.Values[9]*this.Values[7]  + p_Other.Values[10]*this.Values[11]    + p_Other.Values[11]*this.Values[15];
+    
+    l_Values[12] = p_Other.Values[12]*this.Values[0] + p_Other.Values[13]*this.Values[4] + p_Other.Values[14]*this.Values[8]     + p_Other.Values[15]*this.Values[12];
+    l_Values[13] = p_Other.Values[12]*this.Values[1] + p_Other.Values[13]*this.Values[5] + p_Other.Values[14]*this.Values[9]     + p_Other.Values[15]*this.Values[13];
+    l_Values[14] = p_Other.Values[12]*this.Values[2] + p_Other.Values[13]*this.Values[6] + p_Other.Values[14]*this.Values[10]    + p_Other.Values[15]*this.Values[14];
+    l_Values[15] = p_Other.Values[12]*this.Values[3] + p_Other.Values[13]*this.Values[7] + p_Other.Values[14]*this.Values[11]    + p_Other.Values[15]*this.Values[15];
+    
+    this.Values = l_Values;
+};
 
 /*
  * This program is free software; you can redistribute it and/or modify it
@@ -350,6 +386,11 @@ Salvation.Video.Driver = function(p_Device) {
     this.DefaultShader.Bind = DefaultProgramBindFunction;
     this.DefaultShader.Init();
 
+    // Compute base music
+    this.Device.GlContext.viewport(0, 0, this.Device.GlContext.viewportWidth, this.Device.GlContext.viewportHeight);
+    this.ProjectionMatrix.Perspective(45, this.Device.GlContext.viewportWidth / this.Device.GlContext.viewportHeight, 0.1, 100.0);
+    this.ModelViewMatrix.Identity();
+    
     // Bind class functions
     this.BeginScene         = Salvation.Video.Driver_BeginScene;
     this.EndScene           = Salvation.Video.Driver_EndScene;
@@ -364,11 +405,7 @@ Salvation.Video.Driver = function(p_Device) {
 
 // Prepare frame rendering
 Salvation.Video.Driver_BeginScene = function() {
-    this.Device.GlContext.viewport(0, 0, this.Device.GlContext.viewportWidth, this.Device.GlContext.viewportHeight);
     this.Device.GlContext.clear(this.Device.GlContext.COLOR_BUFFER_BIT | this.Device.GlContext.DEPTH_BUFFER_BIT);
-    
-    this.ProjectionMatrix.Perspective(45, this.Device.GlContext.viewportWidth / this.Device.GlContext.viewportHeight, 0.1, 100.0);
-    this.ModelViewMatrix.Identity();
 };
 // End frame rendering
 Salvation.Video.Driver_EndScene = function() {
@@ -380,9 +417,9 @@ Salvation.Video.Driver_DrawMesh = function(p_Mesh, p_Material, p_Position, p_Sca
     this.PushModelView();
 
     // Do local transformation
-    this.ModelViewMatrix.Scale(p_Scale.X, p_Scale.Y, p_Scale.Z);
-    this.ModelViewMatrix.RotateXYZ(p_Rotation.X * DegToRadCoefficient, p_Rotation.Y * DegToRadCoefficient, p_Rotation.Z * DegToRadCoefficient);
     this.ModelViewMatrix.Translate(p_Position.X, p_Position.Y, p_Position.Z);
+    this.ModelViewMatrix.RotateXYZ(p_Rotation.X * DegToRadCoefficient, p_Rotation.Y * DegToRadCoefficient, p_Rotation.Z * DegToRadCoefficient);
+    this.ModelViewMatrix.Scale(p_Scale.X, p_Scale.Y, p_Scale.Z);
 
     // Bind shader
     this.Device.GlContext.useProgram(p_Material.Shader.Program);
@@ -554,12 +591,11 @@ DefaultFragmentProgram += "}";
  DefaultVertexProgram = "attribute vec3 VertexPosition;";
 DefaultVertexProgram += "attribute vec4 VertexColor;"; 
 //DefaultVertexProgram += "attribute vec2 VertexTextureCoord;"; 
-DefaultVertexProgram += "uniform mat4 ModelViewMatrix;"; 
-DefaultVertexProgram += "uniform mat4 ProjectionMatrix;"; 
+DefaultVertexProgram += "uniform mat4 ProjModelViewMatrix;"; 
 DefaultVertexProgram += "varying vec4 Color;"; 
 //DefaultVertexProgram += "varying vec2 TextureCoord;"; 
 DefaultVertexProgram += "void main(void) {"; 
-DefaultVertexProgram += "       gl_Position 	= ProjectionMatrix * ModelViewMatrix * vec4(VertexPosition, 1.0);"; 
+DefaultVertexProgram += "       gl_Position 	= ProjModelViewMatrix * vec4(VertexPosition, 1.0);"; 
 //DefaultVertexProgram += "       TextureCoord 	= VertexTextureCoord;"; 
 DefaultVertexProgram += "       Color 			= VertexColor;"; 
 DefaultVertexProgram += "}"; 
@@ -568,16 +604,18 @@ DefaultVertexProgram += "}";
 DefaultProgramInitFunction = function() {
     this.a_VertexPosition       = this.GetAttributeLocation("VertexPosition");
     this.a_VertexColor          = this.GetAttributeLocation("VertexColor");
-    this.u_ModelViewMatrix      = this.GetUniformLocation("ModelViewMatrix");
-    this.u_ProjectionMatrix     = this.GetUniformLocation("ProjectionMatrix");
+    this.u_ProjModelViewMatrix  = this.GetUniformLocation("ProjModelViewMatrix");
     
     this.SetIsArrayAttribute(this.a_VertexPosition, true);
     this.SetIsArrayAttribute(this.a_VertexColor, true);
 }
 // Default program variable bind function
 DefaultProgramBindFunction = function(p_Mesh) {
-    this.SetUniformMatrix4FV(this.u_ModelViewMatrix, false, this.VideoDriver.ModelViewMatrix);
-    this.SetUniformMatrix4FV(this.u_ProjectionMatrix, false, this.VideoDriver.ProjectionMatrix);
+    this.l_ComputedMatrix = new Salvation.Core.Matrix4();
+    this.l_ComputedMatrix.Import(this.VideoDriver.ProjectionMatrix);
+    this.l_ComputedMatrix.Multiply(this.VideoDriver.ModelViewMatrix);
+    
+    this.SetUniformMatrix4FV(this.u_ProjModelViewMatrix, false, this.l_ComputedMatrix);
     
     this.SetAttributeVertexPointerFloat(this.a_VertexPosition, p_Mesh.VertexBufferPtr);
     this.SetAttributeVertexPointerFloat(this.a_VertexColor, p_Mesh.ColorBufferPtr);
@@ -811,19 +849,22 @@ Salvation.Scene.CubeNode = function(p_SceneManager, p_Name, p_Size) {
 Salvation.Scene.Manager = function(p_Device) {
     this.Type           = "Salvation.Scene.Manager";
     this.Device         = p_Device;
-    this.Nodes          = [] ;
+    this.Nodes          = new Array();
     
     // Bind class functions
     this.DrawAll            = Salvation.Scene.Manager_DrawAll;
     this.AddCubeSceneNode   = Salvation.Scene.Manager_AddCubeSceneNode;
 };
 
+// Draw all scene node
 Salvation.Scene.Manager_DrawAll = function() {
-    for (l_I = 0 ; l_I < this.Nodes.length ; ++l_I)
+    for (var l_I = 0 ; l_I < this.Nodes.length ; ++l_I)
+    {
         if (this.Nodes[l_I].Draw)
             this.Nodes[l_I].Draw();
         else
             this.Nodes[l_I].Node.Draw();
+    }
 };
 
 // Create a cube scene node
