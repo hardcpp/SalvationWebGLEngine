@@ -1,0 +1,30 @@
+<html>
+	<head>
+		<title>Salvation WebGL 01 - Hello world</title>
+		<script type="text/javascript" src="../dist/engine-min.js"></script>
+		<script>
+			var g_Device = 0;
+			
+			// Init sample, called on body=>onLoad
+			function Init()
+			{
+				// Create a new render device for canvas("RenderCanvas")
+				g_Device = new Salvation.Device(document.getElementById("RenderCanvas"));
+				
+				// Check if device is correctly created
+				if (!g_Device.IsCreated())
+				{
+					alert("Failed to create render canvas : " + g_Device.ErrorStr);
+					return;
+				}
+
+				// Render one frame
+				g_Device.VideoDriver.BeginScene();
+				g_Device.VideoDriver.EndScene();
+			}
+		</script>
+	</head>
+	<body onload="Init()">
+		<canvas id="RenderCanvas" style="border: none;" width="900" height="600"></canvas>
+	</body>
+</html>
