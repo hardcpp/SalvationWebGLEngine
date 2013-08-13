@@ -15,21 +15,21 @@
  
 // Color constructor
 Salvation.Video.Color = function(p_R, p_G, p_B, p_A) {
-	this.Type = "Salvation.Video.Color";
+    this.Type = "Salvation.Video.Color";
 
-	if (p_A !== undefined)
-	{
-		this.R = p_R;
-		this.G = p_G;
-		this.B = p_B;
-		this.A = p_A;
-	}
-	else
-	{
-		this.R = 0;
-		this.G = 0;
-		this.B = 0;
-		this.A = 0;
-	}
+    if (p_A !== undefined)
+    {
+        this.R = p_R;
+        this.G = p_G;
+        this.B = p_B;
+        this.A = p_A;
+    }
+    else
+    {
+        this.R = 0;
+        this.G = 0;
+        this.B = 0;
+        this.A = 0;
+    }
 };
 

@@ -15,68 +15,68 @@
  
 // Device constructor
 Salvation.Device = function(p_Canvas) {
-	this.Type 		= "Salvation.Device";
-	this.Canvas 	= p_Canvas;
-	this.GlContext 	= null;
-	
-	if (p_Canvas.addEventListener) 
-	{
-		p_Canvas.addEventListener("webglcontextcreationerror", function(p_Event) {
-			if (p_Canvas.parentNode) 
-			{
-				this.ErrorStr = window.WebGLRenderingContext ? "It doesn't appear your computer can support WebGL." : "This page requires a browser that supports WebGL.";
-				
-				if (p_Event.statusMessage) 
-					this.ErrorStr +=  " Error : " + p_Event.statusMessage;
-			}
+    this.Type       = "Salvation.Device";
+    this.Canvas     = p_Canvas;
+    this.GlContext  = null;
+    
+    if (p_Canvas.addEventListener) 
+    {
+        p_Canvas.addEventListener("webglcontextcreationerror", function(p_Event) {
+            if (p_Canvas.parentNode) 
+            {
+                this.ErrorStr = window.WebGLRenderingContext ? "It doesn't appear your computer can support WebGL." : "This page requires a browser that supports WebGL.";
+                
+                if (p_Event.statusMessage) 
+                    this.ErrorStr +=  " Error : " + p_Event.statusMessage;
+            }
         }, false);
-	}
-	
-	try 
-	{
-		// Cross browser context name detection
-		var l_ContextNames = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
+    }
+    
+    try 
+    {
+        // Cross browser context name detection
+        var l_ContextNames = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
 
-		for (var l_I = 0 ; l_I < l_ContextNames.length; ++l_I) 
-		{
-			if (this.GlContext)
-				continue;
-				
-			try 
-			{
-				this.GlContext = p_Canvas.getContext(l_ContextNames[l_I]);
-			} 
-			catch (l_Exception) 
-			{
-			
-			}
-		}
+        for (var l_I = 0 ; l_I < l_ContextNames.length; ++l_I) 
+        {
+            if (this.GlContext)
+                continue;
+                
+            try 
+            {
+                this.GlContext = p_Canvas.getContext(l_ContextNames[l_I]);
+            } 
+            catch (l_Exception) 
+            {
+            
+            }
+        }
   
-		this.GlContext.viewportWidth 	= p_Canvas.width;
-		this.GlContext.viewportHeight 	= p_Canvas.height;
-	}
-	catch (l_Exception)
-	{
-	
-	}
-	
-	// Bind class functions
-	this.IsCreated = Salvation.Device_IsCreated;
-	
-	if (this.IsCreated)
-	{
-		// Create video driver instance clear screen buffer
-		this.VideoDriver = new Salvation.Video.Driver(this);
-		this.VideoDriver.BeginScene();
-		this.VideoDriver.EndScene();
-	}
+        this.GlContext.viewportWidth    = p_Canvas.width;
+        this.GlContext.viewportHeight   = p_Canvas.height;
+    }
+    catch (l_Exception)
+    {
+    
+    }
+    
+    // Bind class functions
+    this.IsCreated = Salvation.Device_IsCreated;
+    
+    if (this.IsCreated)
+    {
+        // Create video driver instance clear screen buffer
+        this.VideoDriver = new Salvation.Video.Driver(this);
+        this.VideoDriver.BeginScene();
+        this.VideoDriver.EndScene();
+    }
 };
 
 // Check device state
 Salvation.Device_IsCreated = function() {
-	if (this.GlContext)
-		return true;
-		
-	return false;
+    if (this.GlContext)
+        return true;
+        
+    return false;
 }
 

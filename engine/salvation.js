@@ -16,8 +16,8 @@
 // Init class namespaces
 var Salvation = {};
 
-Salvation.Core 	= {};
-Salvation.Video = {};
-Salvation.Scene = {};
-Salvation.Gui 	= {};
+Salvation.Core      = {};
+Salvation.Video     = {};
+Salvation.Scene     = {};
+Salvation.Gui       = {};
 
