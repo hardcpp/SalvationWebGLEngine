@@ -32,6 +32,11 @@ Salvation.Video.Driver = function(p_Device) {
     this.DefaultShader.Bind = DefaultProgramBindFunction;
     this.DefaultShader.Init();
 
+    // Compute base music
+    this.Device.GlContext.viewport(0, 0, this.Device.GlContext.viewportWidth, this.Device.GlContext.viewportHeight);
+    this.ProjectionMatrix.Perspective(45, this.Device.GlContext.viewportWidth / this.Device.GlContext.viewportHeight, 0.1, 100.0);
+    this.ModelViewMatrix.Identity();
+    
     // Bind class functions
     this.BeginScene         = Salvation.Video.Driver_BeginScene;
     this.EndScene           = Salvation.Video.Driver_EndScene;
@@ -46,11 +51,7 @@ Salvation.Video.Driver = function(p_Device) {
 
 // Prepare frame rendering
 Salvation.Video.Driver_BeginScene = function() {
-    this.Device.GlContext.viewport(0, 0, this.Device.GlContext.viewportWidth, this.Device.GlContext.viewportHeight);
     this.Device.GlContext.clear(this.Device.GlContext.COLOR_BUFFER_BIT | this.Device.GlContext.DEPTH_BUFFER_BIT);
-    
-    this.ProjectionMatrix.Perspective(45, this.Device.GlContext.viewportWidth / this.Device.GlContext.viewportHeight, 0.1, 100.0);
-    this.ModelViewMatrix.Identity();
 };
 // End frame rendering
 Salvation.Video.Driver_EndScene = function() {
@@ -63,8 +64,8 @@ Salvation.Video.Driver_DrawMesh = function(p_Mesh, p_Material, p_Position, p_Sca
 
     // Do local transformation
     this.ModelViewMatrix.Scale(p_Scale.X, p_Scale.Y, p_Scale.Z);
-    this.ModelViewMatrix.RotateXYZ(p_Rotation.X * DegToRadCoefficient, p_Rotation.Y * DegToRadCoefficient, p_Rotation.Z * DegToRadCoefficient);
     this.ModelViewMatrix.Translate(p_Position.X, p_Position.Y, p_Position.Z);
+    this.ModelViewMatrix.RotateXYZ(p_Rotation.X * DegToRadCoefficient, p_Rotation.Y * DegToRadCoefficient, p_Rotation.Z * DegToRadCoefficient);
 
     // Bind shader
     this.Device.GlContext.useProgram(p_Material.Shader.Program);
