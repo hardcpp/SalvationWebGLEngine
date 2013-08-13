@@ -28,12 +28,11 @@ DefaultFragmentProgram += "}";
  DefaultVertexProgram = "attribute vec3 VertexPosition;";
 DefaultVertexProgram += "attribute vec4 VertexColor;"; 
 //DefaultVertexProgram += "attribute vec2 VertexTextureCoord;"; 
-DefaultVertexProgram += "uniform mat4 ModelViewMatrix;"; 
-DefaultVertexProgram += "uniform mat4 ProjectionMatrix;"; 
+DefaultVertexProgram += "uniform mat4 ProjModelViewMatrix;"; 
 DefaultVertexProgram += "varying vec4 Color;"; 
 //DefaultVertexProgram += "varying vec2 TextureCoord;"; 
 DefaultVertexProgram += "void main(void) {"; 
-DefaultVertexProgram += "       gl_Position 	= ProjectionMatrix * ModelViewMatrix * vec4(VertexPosition, 1.0);"; 
+DefaultVertexProgram += "       gl_Position 	= ProjModelViewMatrix * vec4(VertexPosition, 1.0);"; 
 //DefaultVertexProgram += "       TextureCoord 	= VertexTextureCoord;"; 
 DefaultVertexProgram += "       Color 			= VertexColor;"; 
 DefaultVertexProgram += "}"; 
@@ -42,16 +41,18 @@ DefaultVertexProgram += "}";
 DefaultProgramInitFunction = function() {
     this.a_VertexPosition       = this.GetAttributeLocation("VertexPosition");
     this.a_VertexColor          = this.GetAttributeLocation("VertexColor");
-    this.u_ModelViewMatrix      = this.GetUniformLocation("ModelViewMatrix");
-    this.u_ProjectionMatrix     = this.GetUniformLocation("ProjectionMatrix");
+    this.u_ProjModelViewMatrix  = this.GetUniformLocation("ProjModelViewMatrix");
     
     this.SetIsArrayAttribute(this.a_VertexPosition, true);
     this.SetIsArrayAttribute(this.a_VertexColor, true);
 }
 // Default program variable bind function
 DefaultProgramBindFunction = function(p_Mesh) {
-    this.SetUniformMatrix4FV(this.u_ModelViewMatrix, false, this.VideoDriver.ModelViewMatrix);
-    this.SetUniformMatrix4FV(this.u_ProjectionMatrix, false, this.VideoDriver.ProjectionMatrix);
+    this.l_ComputedMatrix = new Salvation.Core.Matrix4();
+    this.l_ComputedMatrix.Import(this.VideoDriver.ProjectionMatrix);
+    this.l_ComputedMatrix.Multiply(this.VideoDriver.ModelViewMatrix);
+    
+    this.SetUniformMatrix4FV(this.u_ProjModelViewMatrix, false, this.l_ComputedMatrix);
     
     this.SetAttributeVertexPointerFloat(this.a_VertexPosition, p_Mesh.VertexBufferPtr);
     this.SetAttributeVertexPointerFloat(this.a_VertexColor, p_Mesh.ColorBufferPtr);
