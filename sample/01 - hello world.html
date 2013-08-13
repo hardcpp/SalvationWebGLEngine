@@ -21,11 +21,23 @@
 				l_Cube = g_Device.SceneManager.AddCubeSceneNode("HelloWorldCube", 1);
 				l_Cube.Node.Position.X = -1.5;
 				l_Cube.Node.Position.Z = -7;
+
+				l_Cube2 = g_Device.SceneManager.AddCubeSceneNode("HelloWorldCube2",0.5);
+				l_Cube2.Node.Position.X = 1.5;
+				l_Cube2.Node.Position.Z = -7;
 				
-				// Render one frame
-				g_Device.VideoDriver.BeginScene();
-				g_Device.SceneManager.DrawAll();
-				g_Device.VideoDriver.EndScene();
+				// Render loop
+				setInterval(function() {
+					l_Cube.Node.Rotation.Z += 1;
+					l_Cube2.Node.Rotation.Z += 1;
+
+					l_Cube.Node.Rotation.Y += 1;
+					l_Cube2.Node.Rotation.Y += 1;
+				
+					g_Device.VideoDriver.BeginScene();
+					g_Device.SceneManager.DrawAll();
+					g_Device.VideoDriver.EndScene();
+				}, 20);
 			}
 		</script>
 	</head>
