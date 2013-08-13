@@ -18,45 +18,9 @@
 					return;
 				}
 
-				l_Mesh = g_Device.SceneManager.AddCubeSceneNode("HelloWorldCube", 1);
-				l_Mesh.Node.Position.X = -1.5;
-				l_Mesh.Node.Position.Z = -7;
-				/*l_Mesh.ColorBuffer = [
-					1.0, 0.0, 0.0, 1.0,
-					0.0, 1.0, 0.0, 1.0,
-					0.0, 0.0, 1.0, 1.0,
-					0.0, 0.0, 1.0, 1.0,
-					
-					1.0, 0.0, 0.0, 1.0,
-					0.0, 1.0, 0.0, 1.0,
-					0.0, 0.0, 1.0, 1.0,
-					0.0, 0.0, 1.0, 1.0,
-					
-					1.0, 0.0, 0.0, 1.0,
-					0.0, 1.0, 0.0, 1.0,
-					0.0, 0.0, 1.0, 1.0,
-					0.0, 0.0, 1.0, 1.0,
-					
-					1.0, 0.0, 0.0, 1.0,
-					0.0, 1.0, 0.0, 1.0,
-					0.0, 0.0, 1.0, 1.0,
-					0.0, 0.0, 1.0, 1.0,
-					
-					1.0, 0.0, 0.0, 1.0,
-					0.0, 1.0, 0.0, 1.0,
-					0.0, 0.0, 1.0, 1.0,
-					0.0, 0.0, 1.0, 1.0,
-					
-					1.0, 0.0, 0.0, 1.0,
-					0.0, 1.0, 0.0, 1.0,
-					0.0, 0.0, 1.0, 1.0,
-					0.0, 0.0, 1.0, 1.0,
-				]; 
-				
-				l_Material 	= new Salvation.Video.Material(g_Device.VideoDriver);
-				l_Position 	= new Salvation.Core.Vector3(-1.5, 0, -7);
-				l_Rotation 	= new Salvation.Core.Vector3(0, 0, 0);
-				l_Scale 	= new Salvation.Core.Vector3(1, 1, 1);*/
+				l_Cube = g_Device.SceneManager.AddCubeSceneNode("HelloWorldCube", 1);
+				l_Cube.Node.Position.X = -1.5;
+				l_Cube.Node.Position.Z = -7;
 				
 				// Render one frame
 				g_Device.VideoDriver.BeginScene();
